@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 
 class Post extends Model
 {
+    protected $fillable = ['title', 'body', 'category_id'];
     public function author()
     {
         return $this->belongsTo(User::class);
