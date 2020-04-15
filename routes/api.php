@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('/token', 'Auth\LoginController@getToken');
 
 Route::get('/articles', 'Api\PostController@index');
+Route::get('/category/{category:slug}', 'Api\PostController@category');
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });

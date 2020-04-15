@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Category;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CategoryResource;
 use App\Http\Resources\PostResource;
 use App\Post;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
-    protected $limit = 3;
+    protected $limit = 5;
     /**
      * Display a listing of the resource.
      *
@@ -24,48 +26,25 @@ class PostController extends Controller
         return PostResource::collection($posts);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
+    public function category(Category $category) {
+        $posts = $category->posts()
+            ->with('user')
+            ->latestFirst()
+            ->published()
+            ->simplePaginate($this->limit);
+        return CategoryResource::collection($posts);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Post  $post
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Post $post)
+    public function author(User $author)
     {
-        //
-    }
+        $authorName = $author->name;
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Post  $post
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Post $post)
-    {
-        //
-    }
+        $posts = $author->posts()
+            ->with('category')
+            ->latestFirst()
+            ->published()
+            ->simplePaginate($this->limit);
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Post  $post
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Post $post)
-    {
-        //
+        return PostResource::collection($posts);
     }
 }
