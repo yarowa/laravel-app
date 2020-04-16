@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Api;
 
 use App\Category;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\AuthorResource;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\PostResource;
 use App\Post;
+use App\User;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
@@ -37,7 +39,6 @@ class PostController extends Controller
 
     public function author(User $author)
     {
-        $authorName = $author->name;
 
         $posts = $author->posts()
             ->with('category')
@@ -45,6 +46,6 @@ class PostController extends Controller
             ->published()
             ->simplePaginate($this->limit);
 
-        return PostResource::collection($posts);
+        return AuthorResource::collection($posts);
     }
 }
